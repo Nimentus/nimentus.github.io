@@ -141,6 +141,17 @@
   .chart{margin-top:30px;border:1px solid var(--line);padding:22px 22px 8px;background:var(--paper-soft)}
   .chart .cap{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--mute);margin-bottom:14px}
+  /* coming-soon product cards */
+  .more{margin-top:84px}
+  .prod-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .pcard{border:1px solid var(--line);padding:32px;background:var(--paper-soft);
+    transition:transform .25s ease,border-color .25s ease}
+  .pcard:hover{transform:translateY(-3px);border-color:var(--ink)}
+  .pcard .pnum{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+  .pcard h3{margin:14px 0 11px}
+  .pcard p{font-size:14.5px;line-height:1.6;color:#34322d;margin-bottom:20px}
+  .pcard .soon{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    border:1px solid var(--ink);padding:5px 11px;display:inline-block}
 
   /* writing */
   .posts{border-top:1px solid var(--line)}
@@ -209,6 +220,7 @@
     .hero-grid,.rn-grid,.about-grid{grid-template-columns:1fr}
     .hero-art{height:240px;order:-1}
     .rn-grid{gap:40px}
+    .prod-cards{grid-template-columns:1fr}
     .post{grid-template-columns:1fr;gap:6px}
     .post .stat{margin-top:8px}
     .about-grid{gap:40px}
@@ -271,7 +283,7 @@
   <section class="manifesto">
     <div class="wrap">
       <div class="seclabel rv"><span class="num">01</span><span class="txt">The idea</span><span class="rule"></span></div>
-      <p class="big rv">Big platforms optimize for the big picture. What's left is a long tail of small, recurring, genuinely painful problems nobody owns — the silent dead IP still marked <b>in use</b>, the firewall rule that's done nothing for two years, the source of truth quietly lying to you. Nimentus builds small, precise, open tools that solve <b>exactly one</b> of those — and solve it <span class="g">completely.</span></p>
+      <p class="big rv">Every organization carries the same hidden weight: small, specific problems too narrow to ever reach a major vendor's roadmap. They get worked around, never fixed, and quietly drain time and attention. Nimentus exists to close those gaps — one focused micro app service at a time, each taking a single overlooked problem and carrying it <b>all the way</b> to a real solution, in the <span class="g">open.</span></p>
     </div>
   </section>
 
@@ -336,6 +348,24 @@ score  band           conf   ip
           </div>
         </div>
       </div>
+
+      <div class="more rv">
+        <div class="seclabel" style="margin-bottom:24px"><span class="txt">In the workshop</span><span class="rule"></span></div>
+        <div class="prod-cards">
+          <div class="pcard">
+            <div class="pnum">Product 02</div>
+            <h3>Firewall hygiene</h3>
+            <p>Surface the dead weight in a firewall ruleset — shadowed, redundant, unused, and overly-broad rules — and explain what each rule actually does. The clean-up the enterprise-priced tools price smaller teams out of.</p>
+            <span class="soon">Coming soon</span>
+          </div>
+          <div class="pcard">
+            <div class="pnum">Product 03</div>
+            <h3>Threat intel → Cisco SNA bridge</h3>
+            <p>Cisco Secure Network Analytics can't ingest TAXII feeds. This pipeline pulls malicious indicators from threat-intel sources like Digital Shadows and pushes them straight into SNA host groups — CI/CD that keeps detection current, automatically.</p>
+            <span class="soon">Coming soon</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -383,7 +413,7 @@ score  band           conf   ip
           <h2>Precision over noise.</h2>
           <p>Nimentus is a studio for micro app services — small, sharp tools that take on the issues big platforms treat as too minor to touch. We pick one problem, build the tool that solves it completely, and ship it open and in public.</p>
           <p class="name">Founded by Nima Samadi, network security architect.</p>
-          <div class="quote">Nimentus is the black and white. The precision. And a fan's creed — <span>fino alla fine</span>, until the very end. It's the standard every product is held to.</div>
+          <div class="quote">Nimentus is <span>Nima</span> + <span>Juventus</span>. The black and white. The precision. And a fan's creed — <span>fino alla fine</span>, until the very end. It's the standard every product is held to.</div>
           <p>Everything we build is open source, built in public, and meant to be useful on day one.</p>
         </div>
         <div class="rv">
