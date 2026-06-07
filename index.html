@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nimentus — network automation, fino alla fine</title>
+<title>Nimentus — Micro-utilities for infrastructure requirements </title>
 <meta name="description" content="Nimentus builds small, precise, open tools for the network-hygiene problems the big vendors ignore — dead IPs, firewall sprawl, config drift.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -211,6 +211,10 @@
   .hero .rv{transition-delay:var(--d,0s)}
 
   @media (max-width:860px){
+ /* better view for mobile */
+    .chart svg text {
+      font-size: 11px;
+    }
     .navlinks{position:fixed;inset:0 0 auto 0;top:0;background:var(--paper);flex-direction:column;
       padding:90px 32px 32px;gap:8px;transform:translateY(-100%);transition:transform .35s ease;
       border-bottom:1px solid var(--line);align-items:flex-start}
@@ -258,13 +262,13 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="kicker mono rv" style="--d:0s">Nimentus — Micro app services</div>
-        <h1 class="rv" style="--d:.08s">The problems the<br>giants <em>ignore.</em></h1>
-        <p class="lede rv" style="--d:.16s"><b>Nimentus</b> builds micro app services that solve the small, stubborn problems the big platforms leave behind — dead IPs, firewall sprawl, config drift. Focused tools, each doing one thing completely.</p>
-        <p class="motto rv" style="--d:.24s">Fino alla fine — <span>until the end.</span></p>
-        <div class="cta rv" style="--d:.32s">
-          <a href="#products" class="btn btn-solid">Explore products <span class="arr">→</span></a>
-          <a href="https://github.com/Nimentus" target="_blank" rel="noopener" class="btn btn-ghost">GitHub <span class="arr">↗</span></a>
+<div class="kicker mono rv" style="--d:0s">Nimentus — Targeted Tooling</div>
+      <h1 class="rv" style="--d:.08s">The problems the<br>giants <em>ignore.</em></h1>
+      <p class="lede rv" style="--d:.16s"><b>Nimentus</b> designs and engineered sharp micro-utilities that resolve the stubborn infrastructure gaps left behind by major platforms — dead IPs, firewall sprawl, and config drift. Focused tools, built to do one thing completely.</p>
+      <p class="motto rv" style="--d:.24s">Fino alla fine — <span>until the end.</span></p>
+      <div class="cta rv" style="--d:.32s">
+        <a href="#products" class="btn btn-solid">Explore tools <span class="arr">→</span></a>
+        <a href="https://github.com/Nimentus" target="_blank" rel="noopener" class="btn btn-ghost">GitHub <span class="arr">↗</span></a>
         </div>
       </div>
       <div class="hero-art rv" style="--d:.2s" aria-hidden="true">
@@ -412,7 +416,7 @@ score  band           conf   ip
         <div class="rv">
           <h2>Precision over noise.</h2>
           <p>Nimentus is a studio for micro app services — small, sharp tools that take on the issues big platforms treat as too minor to touch. We pick one problem, build the tool that solves it completely, and ship it open and in public.</p>
-          <p class="name">Founded by curious engineers.</p>
+          <p class="name">An infrastructure automation studio.</p>
           <div class="quote">Nimentus is the black and white. The precision. And a fan's creed — <span>fino alla fine</span>, until the very end. It's the standard every product is held to.</div>
           <p>Everything we build is open source, built in public, and meant to be useful on day one.</p>
         </div>
