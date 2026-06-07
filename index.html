@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nimentus — network automation, fino alla fine</title>
+<meta name="description" content="Nimentus builds small, precise, open tools for the network-hygiene problems the big vendors ignore — dead IPs, firewall sprawl, config drift.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d0c0b;
+    --paper:#f5f3ec;
+    --paper-soft:#ece7dc;
+    --mute:#6c6960;
+    --line:rgba(13,12,11,.13);
+    --gold:#b08d3b;
+    --sans:"IBM Plex Sans",-apple-system,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --serif:"Fraunces",Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:17px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  ::selection{background:var(--ink);color:var(--paper)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 32px}
+  .mono{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+
+  /* ---- stripe motif ---- */
+  .stripes{
+    background-image:repeating-linear-gradient(90deg,var(--ink) 0 13px,transparent 13px 26px);
+  }
+
+  /* ---- header ---- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    transition:background .3s ease,border-color .3s ease,padding .3s ease;
+    border-bottom:1px solid transparent;padding:22px 0;
+  }
+  header.scrolled{
+    background:rgba(245,243,236,.86);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);padding:14px 0;
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);
+    font-weight:600;font-size:22px;letter-spacing:-.01em}
+  .brand .mark{display:flex;gap:2px;height:22px;align-items:stretch}
+  .brand .mark i{width:3px;background:var(--ink);display:block}
+  .brand .mark i:nth-child(4){background:var(--gold)}
+  .brand .mark i:nth-child(5){opacity:.28}
+  .navlinks{display:flex;gap:34px;align-items:center}
+  .navlinks a{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--mute);position:relative;padding:4px 0;transition:color .2s}
+  .navlinks a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;
+    background:var(--ink);transition:width .25s ease}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a:hover::after{width:100%}
+  .menu-btn{display:none;background:none;border:0;cursor:pointer;font-family:var(--mono);
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+
+  /* ---- hero ---- */
+  .hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.55fr .9fr;gap:48px;align-items:center;width:100%}
+  .kicker{color:var(--mute);margin-bottom:26px;display:flex;align-items:center;gap:14px}
+  .kicker::before{content:"";width:34px;height:1px;background:var(--ink)}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(42px,6.4vw,82px);
+    line-height:1.02;letter-spacing:-.025em;margin-bottom:30px}
+  h1 em{font-style:italic;font-weight:300}
+  .lede{font-size:20px;line-height:1.6;color:#2b2925;max-width:30em;margin-bottom:18px}
+  .lede b{font-weight:600}
+  .motto{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--ink);margin-bottom:38px}
+  .motto span{color:var(--gold)}
+  .cta{display:flex;gap:16px;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:15px 26px;border:1px solid var(--ink);transition:all .22s ease;display:inline-flex;
+    align-items:center;gap:9px}
+  .btn-solid{background:var(--ink);color:var(--paper)}
+  .btn-solid:hover{background:transparent;color:var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper)}
+  .btn .arr{transition:transform .22s ease}
+  .btn:hover .arr{transform:translateX(4px)}
+
+  /* hero stripe art */
+  .hero-art{position:relative;height:430px;display:flex;justify-content:center}
+  .hero-art .field{position:relative;width:100%;height:100%;overflow:hidden;
+    border:1px solid var(--ink);background:var(--paper-soft)}
+  .hero-art .bars{position:absolute;inset:0;display:flex;gap:0}
+  .hero-art .bars b{flex:1;background:var(--ink)}
+  .hero-art .bars b:nth-child(even){background:transparent}
+  .hero-art .bars b.dim{background:#bdb8ab}
+  .hero-art .star{position:absolute;top:22px;left:50%;transform:translateX(-50%);
+    color:var(--gold);font-size:26px}
+  .hero-art .tag{position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:var(--paper);
+    font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    text-align:center;padding:11px}
+
+  /* ---- section scaffolding ---- */
+  section{padding:110px 0;position:relative}
+  .seclabel{display:flex;align-items:baseline;gap:16px;margin-bottom:44px}
+  .seclabel .num{font-family:var(--serif);font-size:15px;color:var(--gold);font-style:italic}
+  .seclabel .txt{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+  .seclabel .rule{flex:1;height:1px;background:var(--line)}
+  h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,52px);
+    line-height:1.08;letter-spacing:-.02em}
+  h3{font-family:var(--serif);font-weight:500;font-size:25px;letter-spacing:-.01em}
+
+  /* manifesto */
+  .manifesto{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper-soft)}
+  .manifesto .big{font-family:var(--serif);font-weight:300;font-size:clamp(24px,3vw,34px);
+    line-height:1.42;letter-spacing:-.015em;max-width:18em}
+  .manifesto .big b{font-weight:600}
+  .manifesto .big .g{font-style:italic;color:var(--gold)}
+
+  /* reclaimnet */
+  .rn-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+  .rn-grid p{color:#34322d;margin:18px 0}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;border:1px solid var(--line);padding:6px 12px;margin-bottom:22px;color:var(--mute)}
+  .feat{list-style:none;margin:26px 0 30px;display:grid;gap:14px}
+  .feat li{display:flex;gap:13px;align-items:flex-start;font-size:15.5px}
+  .feat li .b{width:9px;height:9px;flex:none;margin-top:7px;background:var(--ink)}
+  .feat li:last-child .b{background:var(--gold)}
+  /* terminal */
+  .term{background:#0d0c0b;color:#e9e6dd;border-radius:7px;overflow:hidden;
+    font-family:var(--mono);font-size:12.5px;line-height:1.85;box-shadow:0 26px 50px -28px rgba(0,0,0,.55)}
+  .term .bar{background:#1b1a17;padding:11px 15px;display:flex;gap:7px;align-items:center}
+  .term .bar i{width:11px;height:11px;border-radius:50%;background:#3a382f;display:block}
+  .term .bar i:first-child{background:#5a564a}
+  .term .bar .t{margin-left:12px;color:#7d7a6f;letter-spacing:.06em;font-size:11px}
+  .term .body{padding:18px 18px 22px;white-space:pre;overflow-x:auto}
+  .term .pr{color:#8f8a7c}
+  .term .dead{color:#e0b14e}
+  .term .alive{color:#9fc08a}
+  .term .cm{color:#6d6a5f}
+  .chart{margin-top:30px;border:1px solid var(--line);padding:22px 22px 8px;background:var(--paper-soft)}
+  .chart .cap{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--mute);margin-bottom:14px}
+
+  /* writing */
+  .posts{border-top:1px solid var(--line)}
+  .post{display:grid;grid-template-columns:160px 1fr auto;gap:30px;align-items:baseline;
+    padding:30px 0;border-bottom:1px solid var(--line);transition:padding .25s ease}
+  .post .date{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+  .post .ttl{font-family:var(--serif);font-size:24px;font-weight:500;letter-spacing:-.01em;transition:color .2s}
+  .post .ex{color:var(--mute);font-size:15px;margin-top:7px;max-width:42em}
+  .post .stat{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .post.soon .ttl{color:var(--mute)}
+  .post.live{cursor:pointer}
+  .post.live:hover{padding-left:14px}
+  .post.live:hover .ttl{color:var(--ink)}
+
+  /* about */
+  .about{background:var(--ink);color:var(--paper)}
+  .about .seclabel .txt{color:#9a978d}
+  .about .seclabel .rule{background:rgba(245,243,236,.16)}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .about h2{color:var(--paper)}
+  .about p{color:#cbc7bc;margin:20px 0;font-size:17px}
+  .about .name{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--paper)}
+  .quote{border-left:2px solid var(--gold);padding:6px 0 6px 24px;margin:28px 0;
+    font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.5;color:var(--paper)}
+  .quote span{color:var(--gold)}
+  .photo{aspect-ratio:4/5;background:var(--paper-soft) repeating-linear-gradient(90deg,#0d0c0b 0 13px,transparent 13px 26px);
+    border:1px solid rgba(245,243,236,.2);position:relative;display:flex;align-items:center;justify-content:center}
+  .photo .ph{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink);background:var(--paper);padding:9px 14px;border:1px solid var(--ink)}
+
+  /* contact */
+  .contact h2{max-width:14em;margin-bottom:36px}
+  .clinks{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+  .clink{display:flex;align-items:center;justify-content:space-between;padding:26px 0;
+    border-bottom:1px solid var(--line);transition:padding .25s ease}
+  .clink:hover{padding-left:14px}
+  .clink .l{font-family:var(--serif);font-size:clamp(24px,3vw,34px);font-weight:400}
+  .clink .v{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--mute)}
+  .clink .arr{transition:transform .22s}
+  .clink:hover .arr{transform:translate(5px,-5px)}
+
+  /* footer */
+  footer{background:var(--ink);color:var(--paper);padding:60px 0 40px}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot .brand{color:var(--paper)}
+  .foot .brand .mark i{background:var(--paper)}
+  .foot .brand .mark i:nth-child(4){background:var(--gold)}
+  .foot .creed{font-family:var(--serif);font-style:italic;font-size:18px}
+  .foot .creed span{color:var(--gold)}
+  .foot .cr{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#9a978d;text-transform:uppercase}
+  .foot-stripe{height:6px;margin-top:40px}
+  .foot-stripe i{display:inline-block;width:13px;height:100%}
+
+  /* reveal animation */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .hero .rv{transition-delay:var(--d,0s)}
+
+  @media (max-width:860px){
+    .navlinks{position:fixed;inset:0 0 auto 0;top:0;background:var(--paper);flex-direction:column;
+      padding:90px 32px 32px;gap:8px;transform:translateY(-100%);transition:transform .35s ease;
+      border-bottom:1px solid var(--line);align-items:flex-start}
+    .navlinks.open{transform:none}
+    .navlinks a{font-size:15px;padding:12px 0}
+    .menu-btn{display:block;z-index:60}
+    .hero-grid,.rn-grid,.about-grid{grid-template-columns:1fr}
+    .hero-art{height:240px;order:-1}
+    .rn-grid{gap:40px}
+    .post{grid-template-columns:1fr;gap:6px}
+    .post .stat{margin-top:8px}
+    .about-grid{gap:40px}
+    .photo{max-width:300px}
+    section{padding:78px 0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto}
+    .rv{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#top" class="brand" aria-label="Nimentus home">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      Nimentus
+    </a>
+    <nav class="navlinks" id="navlinks">
+      <a href="#work">Work</a>
+      <a href="#writing">Writing</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a href="https://github.com/Nimentus" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker mono rv" style="--d:0s">Nimentus — Network automation</div>
+        <h1 class="rv" style="--d:.08s">The network problems<br>the giants <em>ignore.</em></h1>
+        <p class="lede rv" style="--d:.16s">I'm <b>Nima</b> — a network security architect who automates the dead IPs, firewall sprawl, and config drift that Cisco, Infoblox, and the rest treat as too small to bother with.</p>
+        <p class="motto rv" style="--d:.24s">Fino alla fine — <span>until the end.</span></p>
+        <div class="cta rv" style="--d:.32s">
+          <a href="#work" class="btn btn-solid">View ReclaimNet <span class="arr">→</span></a>
+          <a href="https://github.com/Nimentus" target="_blank" rel="noopener" class="btn btn-ghost">GitHub <span class="arr">↗</span></a>
+        </div>
+      </div>
+      <div class="hero-art rv" style="--d:.2s" aria-hidden="true">
+        <div class="field">
+          <div class="star">★</div>
+          <div class="bars">
+            <b></b><b></b><b></b><b></b><b></b><b></b><b></b><b class="dim"></b><b></b><b></b><b></b><b></b><b></b>
+          </div>
+          <div class="tag">Fino alla Fine</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MANIFESTO ===================== -->
+  <section class="manifesto">
+    <div class="wrap">
+      <div class="seclabel rv"><span class="num">01</span><span class="txt">The idea</span><span class="rule"></span></div>
+      <p class="big rv">Big platforms optimize for the big picture. What's left is a long tail of small, recurring, genuinely painful problems nobody owns — the silent dead IP still marked <b>in use</b>, the firewall rule that's done nothing for two years, the source of truth quietly lying to you. Nimentus builds small, precise, open tools that solve <b>exactly one</b> of those — and solve it <span class="g">completely.</span></p>
+    </div>
+  </section>
+
+  <!-- ===================== RECLAIMNET ===================== -->
+  <section id="work">
+    <div class="wrap">
+      <div class="seclabel rv"><span class="num">02</span><span class="txt">Flagship · open source</span><span class="rule"></span></div>
+      <div class="rn-grid">
+        <div class="rv">
+          <span class="pill">ReclaimNet</span>
+          <h2>Confidence-scored liveness for IP address space.</h2>
+          <p>Your IPAM says an address is in use. The wire says nothing's there. ReclaimNet reconciles the two — gathering evidence from independent collectors over time and scoring how alive each address really is.</p>
+          <p>It never declares an IP dead on a hunch. It watches, accumulates proof, and only commits when it's certain.</p>
+          <ul class="feat">
+            <li><span class="b"></span><span><b>Evidence over guesses</b> — every verdict carries its proof trail.</span></li>
+            <li><span class="b"></span><span><b>Confidence, not booleans</b> — a score and a trust level, never a blind "dead."</span></li>
+            <li><span class="b"></span><span><b>Modular collectors</b> — ARP, ping, cloud, DHCP; add a source, the core never changes.</span></li>
+            <li><span class="b"></span><span><b>Never auto-reclaims</b> — the call stays with a human, with eyes open.</span></li>
+          </ul>
+          <a href="https://github.com/Nimentus/reclaimnet" target="_blank" rel="noopener" class="btn btn-ghost">View on GitHub <span class="arr">↗</span></a>
+        </div>
+        <div class="rv">
+          <div class="term">
+            <div class="bar" aria-hidden="true"><i></i><i></i><i></i><span class="t">reclaimnet — report</span></div>
+            <div class="body"><span class="pr">$</span> reclaimnet report --cidr 172.16.254.0/24
+
+score  band           conf   ip
+─────────────────────────────────────────
+<span class="dead"> 30.0  dead           1.00   172.16.254.199</span>  <span class="cm">← off 60m</span>
+<span class="alive">100.0  alive-chatty   1.00   172.16.254.1</span>
+<span class="alive">100.0  alive-chatty   1.00   172.16.254.10</span>
+<span class="alive">100.0  alive-chatty   1.00   172.16.254.20</span>
+<span class="alive">100.0  alive-chatty   1.00   172.16.254.194</span></div>
+          </div>
+          <div class="chart">
+            <div class="cap">A host dying — score over 60 minutes of silence</div>
+            <svg viewBox="0 0 480 180" width="100%" role="img" aria-label="Line chart showing an IP's liveness score decaying from 100 to the dead band over 60 minutes, while live hosts stay at 100.">
+              <!-- band guides -->
+              <line x1="46" y1="20"  x2="468" y2="20"  stroke="#cfcabd" stroke-width="1" stroke-dasharray="2 4"/>
+              <line x1="46" y1="56"  x2="468" y2="56"  stroke="#cfcabd" stroke-width="1" stroke-dasharray="2 4"/>
+              <line x1="46" y1="92"  x2="468" y2="92"  stroke="#cfcabd" stroke-width="1" stroke-dasharray="2 4"/>
+              <line x1="46" y1="128" x2="468" y2="128" stroke="#cfcabd" stroke-width="1" stroke-dasharray="2 4"/>
+              <!-- live host flat at 100 -->
+              <line x1="46" y1="20" x2="468" y2="20" stroke="#0d0c0b" stroke-width="1.5" stroke-dasharray="3 3" opacity=".4"/>
+              <!-- decay line 100 -> 30 -->
+              <polyline points="46,20 116,46 186,72 256,99 326,118 396,128" fill="none" stroke="#0d0c0b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="396" cy="128" r="5" fill="#b08d3b"/>
+              <!-- y labels -->
+              <text x="38" y="24"  font-family="IBM Plex Mono,monospace" font-size="9" fill="#6c6960" text-anchor="end">100</text>
+              <text x="38" y="60"  font-family="IBM Plex Mono,monospace" font-size="9" fill="#6c6960" text-anchor="end">80</text>
+              <text x="38" y="96"  font-family="IBM Plex Mono,monospace" font-size="9" fill="#6c6960" text-anchor="end">50</text>
+              <text x="38" y="132" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6c6960" text-anchor="end">30</text>
+              <!-- band names -->
+              <text x="462" y="16"  font-family="IBM Plex Mono,monospace" font-size="8.5" fill="#9a978d" text-anchor="end">CHATTY</text>
+              <text x="462" y="52"  font-family="IBM Plex Mono,monospace" font-size="8.5" fill="#9a978d" text-anchor="end">SILENT</text>
+              <text x="462" y="124" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="#b08d3b" text-anchor="end">DEAD</text>
+              <!-- x axis -->
+              <text x="46"  y="160" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6c6960">0m</text>
+              <text x="396" y="160" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6c6960" text-anchor="middle">60m</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WRITING ===================== -->
+  <section id="writing">
+    <div class="wrap">
+      <div class="seclabel rv"><span class="num">03</span><span class="txt">Writing · build in public</span><span class="rule"></span></div>
+      <div class="posts rv">
+
+        <!-- FIRST REAL POST — link this to your post once written -->
+        <a class="post live" href="#">
+          <div class="date">Jun 2026</div>
+          <div>
+            <div class="ttl">Watching an IP die: validating a liveness engine on real hardware</div>
+            <div class="ex">I powered off a lab host and watched its score decay from 100 to "dead" over exactly 60 minutes — and caught a confidence bug that would've let a truly-dead host hide forever.</div>
+          </div>
+          <div class="stat">Read →</div>
+        </a>
+
+        <!-- PLACEHOLDER POSTS — replace as you publish -->
+        <a class="post soon">
+          <div class="date">Soon</div>
+          <div><div class="ttl">Why my dead-IP tool doesn't trust ping</div>
+            <div class="ex">A ping reply proves life. Ping silence proves almost nothing. The asymmetry that quietly breaks most reclamation tools.</div></div>
+          <div class="stat">Coming</div>
+        </a>
+
+        <a class="post soon">
+          <div class="date">Soon</div>
+          <div><div class="ttl">Five lies your source of truth is telling you</div>
+            <div class="ex">The gap between what IPAM says and what's actually on the wire — and how to find it.</div></div>
+          <div class="stat">Coming</div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about" class="about">
+    <div class="wrap">
+      <div class="seclabel rv"><span class="num">04</span><span class="txt">About</span><span class="rule"></span></div>
+      <div class="about-grid">
+        <div class="rv">
+          <h2>Precision over noise.</h2>
+          <p class="name">Nima Samadi — network security architect.</p>
+          <p>I spend my days inside enterprise networks: firewalls, IPAM, fabrics, automation. Over the years the same pattern kept repeating — the most painful problems were also the smallest, the ones too unglamorous for any vendor roadmap. Nimentus is where I build the tools to kill them, one at a time.</p>
+          <div class="quote">Nimentus is <span>Nima</span> + <span>Juventus</span>. The black and white. The precision. And a fan's creed — <span>fino alla fine</span>, until the very end. It's the standard every tool here is held to.</div>
+          <p>Everything here is open source, built in public, and meant to be useful on day one.</p>
+        </div>
+        <div class="rv">
+          <!-- REPLACE: drop your photo here. Set as background-image or <img>. -->
+          <div class="photo"><span class="ph">Your photo here</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="seclabel rv"><span class="num">05</span><span class="txt">Work with me</span><span class="rule"></span></div>
+      <h2 class="rv">Available for consulting and contract work on network automation, security architecture, and tooling.</h2>
+      <div class="clinks rv">
+        <!-- REPLACE the href + .v values with your real details -->
+        <a class="clink" href="mailto:hello@nimentus.com">
+          <span class="l">Email</span><span class="v">hello@nimentus.com&nbsp;&nbsp;<span class="arr">↗</span></span>
+        </a>
+        <a class="clink" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">
+          <span class="l">LinkedIn</span><span class="v">in/your-handle&nbsp;&nbsp;<span class="arr">↗</span></span>
+        </a>
+        <a class="clink" href="https://github.com/Nimentus" target="_blank" rel="noopener">
+          <span class="l">GitHub</span><span class="v">github.com/Nimentus&nbsp;&nbsp;<span class="arr">↗</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="#top" class="brand"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span> Nimentus</a>
+      <div class="creed">Fino alla <span>fine.</span></div>
+      <div class="cr">© 2026 Nimentus · Built in public</div>
+    </div>
+    <div class="foot-stripe" aria-hidden="true" id="footStripe"></div>
+  </div>
+</footer>
+
+<script>
+  // sticky header state
+  const hdr=document.getElementById('hdr');
+  const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>40);
+  onScroll();addEventListener('scroll',onScroll,{passive:true});
+
+  // mobile menu
+  const btn=document.getElementById('menuBtn'),links=document.getElementById('navlinks');
+  btn.addEventListener('click',()=>{
+    const open=links.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open);btn.textContent=open?'Close':'Menu';
+  });
+  links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    links.classList.remove('open');btn.textContent='Menu';btn.setAttribute('aria-expanded','false');
+  }));
+
+  // scroll reveal
+  const io=new IntersectionObserver((es)=>es.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+  }),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+  // hero reveals immediately
+  document.querySelectorAll('.hero .rv').forEach(el=>el.classList.add('in'));
+
+  // footer stripe build (alternating black/gold/transparent)
+  const fs=document.getElementById('footStripe');
+  for(let i=0;i<54;i++){const b=document.createElement('i');
+    b.style.background = i%9===4 ? '#b08d3b' : (i%2 ? 'transparent' : '#f5f3ec');
+    fs.appendChild(b);}
+</script>
+</body>
+</html>
