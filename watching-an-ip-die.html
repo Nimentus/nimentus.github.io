@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watching an IP die — Nimentus</title>
+<meta name="description" content="Building a confidence-scored liveness engine for IP address space — and learning the hard way why 'is this host alive?' is a worse question than it sounds.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d0c0b;
+    --paper:#f5f3ec;
+    --paper-soft:#ece7dc;
+    --mute:#6c6960;
+    --line:rgba(13,12,11,.13);
+    --gold:#b08d3b;
+    --sans:"IBM Plex Sans",-apple-system,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --serif:"Fraunces",Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:18px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  ::selection{background:var(--ink);color:var(--paper)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 32px}
+  .mono{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+
+  /* ---- header (same as site) ---- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    transition:background .3s ease,border-color .3s ease,padding .3s ease;
+    border-bottom:1px solid transparent;padding:22px 0;
+  }
+  header.scrolled{
+    background:rgba(245,243,236,.86);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);padding:14px 0;
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);
+    font-weight:600;font-size:22px;letter-spacing:-.01em}
+  .brand .mark{display:flex;gap:2px;height:22px;align-items:stretch}
+  .brand .mark i{width:3px;background:var(--ink);display:block}
+  .brand .mark i:nth-child(4){background:var(--gold)}
+  .brand .mark i:nth-child(5){opacity:.28}
+  .navlinks{display:flex;gap:34px;align-items:center}
+  .navlinks a{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--mute);position:relative;padding:4px 0;transition:color .2s}
+  .navlinks a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;
+    background:var(--ink);transition:width .25s ease}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a:hover::after{width:100%}
+  .menu-btn{display:none;background:none;border:0;cursor:pointer;font-family:var(--mono);
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+
+  /* ---- article ---- */
+  .article-head{padding:160px 0 50px;border-bottom:1px solid var(--line)}
+  .article-head .wrap{max-width:760px}
+  .backlink{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--mute);display:inline-flex;align-items:center;gap:8px;margin-bottom:34px;transition:color .2s}
+  .backlink:hover{color:var(--ink)}
+  .meta{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:22px;display:flex;gap:14px;align-items:center}
+  .meta .dot{width:3px;height:3px;border-radius:50%;background:var(--mute)}
+  .meta .m{color:var(--mute)}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(36px,5.4vw,58px);
+    line-height:1.05;letter-spacing:-.025em;margin-bottom:24px}
+  .standfirst{font-family:var(--serif);font-style:italic;font-weight:300;
+    font-size:clamp(19px,2.4vw,24px);line-height:1.5;color:#34322d}
+
+  article{padding:56px 0 40px}
+  article .wrap{max-width:680px}
+  article h2{font-family:var(--serif);font-weight:500;font-size:clamp(26px,3.4vw,34px);
+    line-height:1.15;letter-spacing:-.02em;margin:54px 0 20px}
+  article p{margin:0 0 22px;color:#26241f}
+  article p b{font-weight:600}
+  article em{font-style:italic}
+  article a.inline{border-bottom:1px solid var(--gold);transition:background .2s}
+  article a.inline:hover{background:rgba(176,141,59,.12)}
+  article ul{list-style:none;margin:0 0 22px;display:grid;gap:13px}
+  article ul li{display:flex;gap:13px;align-items:flex-start}
+  article ul li .b{width:8px;height:8px;flex:none;margin-top:9px;background:var(--ink)}
+  article ul li:first-child .b{background:var(--gold)}
+  .lead{font-size:21px;line-height:1.6}
+
+  /* pull divider */
+  .rule-strong{height:1px;background:var(--line);margin:46px 0}
+
+  /* figure / screenshot */
+  figure{margin:40px 0;border:1px solid var(--line);background:var(--paper-soft);overflow:hidden}
+  figure img{width:100%;display:block}
+  figure .ph{aspect-ratio:16/6;display:flex;align-items:center;justify-content:center;text-align:center;
+    padding:24px;background:repeating-linear-gradient(90deg,rgba(13,12,11,.04) 0 13px,transparent 13px 26px)}
+  figure .ph span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--mute);max-width:34em;line-height:1.6}
+  figcaption{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--mute);
+    padding:14px 18px;border-top:1px solid var(--line);line-height:1.5}
+
+  /* closing creed */
+  .creed-line{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--gold);
+    margin:40px 0 0;text-align:center}
+
+  /* end card */
+  .endcard{border-top:1px solid var(--line);margin-top:56px;padding-top:40px}
+  .endcard p{color:var(--mute);font-size:16px;font-style:italic;margin-bottom:24px}
+  .btn{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:15px 26px;border:1px solid var(--ink);transition:all .22s ease;display:inline-flex;
+    align-items:center;gap:9px}
+  .btn-solid{background:var(--ink);color:var(--paper)}
+  .btn-solid:hover{background:transparent;color:var(--ink)}
+  .btn .arr{transition:transform .22s ease}
+  .btn:hover .arr{transform:translateX(4px)}
+
+  /* footer (same as site) */
+  footer{background:var(--ink);color:var(--paper);padding:60px 0 40px;margin-top:70px}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot .brand{color:var(--paper)}
+  .foot .brand .mark i{background:var(--paper)}
+  .foot .brand .mark i:nth-child(4){background:var(--gold)}
+  .foot .creed{font-family:var(--serif);font-style:italic;font-size:18px}
+  .foot .creed span{color:var(--gold)}
+  .foot .cr{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#9a978d;text-transform:uppercase}
+  .foot-stripe{height:6px;margin-top:40px}
+  .foot-stripe i{display:inline-block;width:13px;height:100%}
+
+  @media (max-width:860px){
+    .navlinks{position:fixed;inset:0 0 auto 0;top:0;background:var(--paper);flex-direction:column;
+      padding:90px 32px 32px;gap:8px;transform:translateY(-100%);transition:transform .35s ease;
+      border-bottom:1px solid var(--line);align-items:flex-start}
+    .navlinks.open{transform:none}
+    .navlinks a{font-size:15px;padding:12px 0}
+    .menu-btn{display:block;z-index:60}
+    .article-head{padding:130px 0 40px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="index.html#top" class="brand" aria-label="Nimentus home">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      Nimentus
+    </a>
+    <nav class="navlinks" id="navlinks">
+      <a href="index.html#products">Products</a>
+      <a href="index.html#writing">Writing</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="https://github.com/Nimentus" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+  </div>
+</header>
+
+<div class="article-head">
+  <div class="wrap">
+    <a href="index.html#writing" class="backlink">← Writing</a>
+    <div class="meta">
+      <span>Jun 2026</span><span class="dot"></span><span class="m">ReclaimNet · build in public</span>
+    </div>
+    <h1>Watching an IP die</h1>
+    <p class="standfirst">Building a confidence-scored liveness engine for IP address space — and learning, the hard way, why "is this host alive?" is a worse question than it sounds.</p>
+  </div>
+</div>
+
+<article>
+  <div class="wrap">
+
+    <p class="lead">Every network has them: IP addresses your source of truth swears are in use, but that nothing on the wire has answered for in months. Someone allocated <b>.47</b> for a server three years ago. The server was decommissioned. Nobody updated IPAM. Now <b>.47</b> is a ghost — marked active, occupying space, and one day it'll get handed to a new host and collide with something, or just sit there forever, quietly wrong.</p>
+
+    <p>Finding those is harder than it looks. And the naive version is dangerous. This is the story of building a tool that does it carefully — and the bugs I caught along the way that would have made it lie.</p>
+
+    <p>The tool is <b>ReclaimNet</b>, the first thing out of Nimentus. It's open source. This is how it came to be.</p>
+
+    <h2>The trap in "is this host alive?"</h2>
+
+    <p>The obvious approach: ping every address, whatever doesn't answer is dead, reclaim it.</p>
+
+    <p>This is wrong, and it's the kind of wrong that causes outages. Plenty of live, important hosts don't answer ping — firewalled ICMP is the default on half the boxes in any enterprise. A server can be perfectly alive and utterly silent to a probe. Mark it dead, hand its address to something else, and you've just taken down production with a tool that was "only cleaning up."</p>
+
+    <p>So the real problem isn't <em>detecting</em> life. It's this asymmetry:</p>
+
+    <ul>
+      <li><span class="b"></span><span><b>Presence is proof.</b> If something answers, it's alive. Certain.</span></li>
+      <li><span class="b"></span><span><b>Absence is not proof.</b> Silence could mean dead, or firewalled, or busy — or you weren't really listening.</span></li>
+    </ul>
+
+    <p>You can never prove a host is dead from a single look. You can only accumulate <em>failure to find life</em>, across multiple independent methods, over time — and get progressively more confident. That word, <em>confident</em>, turned out to be the whole design.</p>
+
+    <h2>Confidence, not a yes/no</h2>
+
+    <p>ReclaimNet never declares an IP dead. It maintains a <b>liveness score</b> per address, and a separate <b>confidence</b> in that score.</p>
+
+    <p>The score runs 0–100 with bands: <em>alive-chatty</em> (seen constantly), <em>alive-silent</em> (was alive, gone quiet), <em>half-dead</em>, and <em>dead</em>. A host that's actively talking saturates near 100. When it goes silent, a small penalty walks the score down over time — through the bands — so where it sits tells you <em>how long</em> it's been quiet. The bands aren't categories; they're stages of decay.</p>
+
+    <p>The penalty is small and slow while a sighting jumps the score back up fast. The system is quick to trust life and reluctant to declare death — exactly the asymmetry the problem demands. But the score alone isn't enough, which is where most of the hard thinking went.</p>
+
+    <figure>
+      <!-- REPLACE the .ph block with: <img src="images/netbox-list.png" alt="..."> -->
+      <div class="ph"><span>[ screenshot: NetBox IP list — reclaimnet_score, reclaimnet_confidence and band tags across five IPs; one host at 56.25 / alive-silent in green while the rest sit at 100 / alive-chatty ]</span></div>
+      <figcaption>ReclaimNet's verdicts, written back into NetBox as native columns and tags. One host has gone quiet and is decaying; the rest are confidently alive.</figcaption>
+    </figure>
+
+    <h2>The bug that taught me everything: confidence has to mean "did we look," not "did we see"</h2>
+
+    <p>Here's the subtle part. What should <em>confidence</em> be based on?</p>
+
+    <p>My first instinct: the more times we've observed a host, the more confident we are. Reasonable, and completely backwards — and it took watching a real host die to see why.</p>
+
+    <p>I powered off a lab VM and watched its score decay correctly, minute by minute, toward dead. But its confidence <em>collapsed</em> to near zero, and the tool refused to commit to the verdict. Why? Because the moment the host went dark, it stopped being observed. Its observation count froze. And since confidence was tied to observation count, <b>the host most likely to be dead had the least confidence to say so.</b> A dead host can never accumulate the evidence that would let you call it dead. The detection mechanism strangled itself.</p>
+
+    <p>The fix reframes the entire idea. Confidence isn't about how many times you <em>saw</em> the host. It's about how thoroughly you <em>looked</em> — how many times a working sensor swept that host's segment, whether or not anything answered. A successful sweep that finds nothing is strong evidence <em>about</em> the host: we looked, competently, and nobody was home. Stack up enough of those and you become <em>highly</em> confident it's dead — the exact opposite of the broken version.</p>
+
+    <p>Coverage, not observation. That one distinction is the difference between a tool you can trust to touch your source of truth and one that quietly lies. It was subtle enough to survive a full passing test suite — because none of the tests checked it. The bug lived exactly where I wasn't looking.</p>
+
+    <h2>The lesson that wasn't in the code: where you stand changes what's true</h2>
+
+    <p>The second hard lesson had nothing to do with logic. I was running the prober from my laptop, which had a mesh VPN running. A powered-off host kept coming back as <em>alive</em> — because the VPN's network stack was answering on its behalf, from somewhere else entirely.</p>
+
+    <p>The tool wasn't wrong. It was faithfully reporting what it could reach. The problem was <em>where it was standing.</em> A liveness tool is only as honest as its vantage point — run it behind a VPN, a NAT, an overlay, and it reports the plumbing, not the host. Moving the prober onto a jumphost with real, direct adjacency to the segment fixed it instantly.</p>
+
+    <p>That's now a deployment principle, learned empirically: the sensor has to sit where it can see the truth, not a translation of it.</p>
+
+    <h2>Two witnesses are better than one</h2>
+
+    <p>ReclaimNet is modular by design — collectors plug into a stable core. It started with one source: ARP tables pulled via SNMP from the segment's gateway, a passive, strong signal (if a host recently resolved at layer 2, something's there). Then I added an active prober: ICMP plus TCP probes to common ports, because a host that ignores ping will often answer a connection — and a <em>refused</em> connection still proves the host is up.</p>
+
+    <p>The two corroborate. Where they agree, confidence climbs faster than either could alone. A host has to go silent on <em>both</em> — ARP aging out <em>and</em> the prober finding nothing — before it falls. One witness can be fooled; two agreeing is much harder to argue with. The architecture means a third and fourth witness — NetFlow, cloud APIs, DHCP — slot in later without touching the scoring core. The core is the gold.</p>
+
+    <h2>Closing the loop: reconciling against the source of truth</h2>
+
+    <p>The point of all this isn't to scan a subnet — it's to answer a sharper question: <b>does reality match what you documented?</b></p>
+
+    <p>ReclaimNet reads its targets from NetBox — the IPs you've actually claimed exist — and reconciles them against what it observes. That produces the two findings that matter:</p>
+
+    <ul>
+      <li><span class="b"></span><span><b>Documented, but dead.</b> NetBox says <em>active</em>; ReclaimNet has watched, thoroughly, and found nothing. These are your reclaim candidates.</span></li>
+      <li><span class="b"></span><span><b>Alive, but undocumented.</b> A host answering on the wire that NetBox has no record of. Shadow IPs — the opposite problem, and a security one.</span></li>
+    </ul>
+
+    <figure>
+      <!-- REPLACE the .ph block with: <img src="images/reconciliation.png" alt="..."> -->
+      <div class="ph"><span>[ screenshot: terminal reconciliation report with the nb_status column — a row where NetBox says "active" and ReclaimNet says "dead", flagged as a reclaim candidate ]</span></div>
+      <figcaption>The whole point in one line: the source of truth and reality, disagreeing — with the evidence to back it.</figcaption>
+    </figure>
+
+    <p>And then it closes the loop. ReclaimNet writes its verdict <em>back</em> into NetBox — as a tag and custom fields on the IP object — so the answer lives where engineers already work, not buried in another tool's dashboard.</p>
+
+    <p>The write is deliberate, never automatic. Given that a contaminated input once made a dead host look alive, letting an unattended process rewrite the source of truth on its own judgment is exactly the mistake the whole design exists to avoid. A human stays in the loop. The tool informs; it doesn't decide.</p>
+
+    <h2>Where it is now</h2>
+
+    <p>ReclaimNet runs as a service — collecting continuously, scoring over time, reconciling against NetBox, ready to write verdicts back when asked. It found a dead-but-documented host in my lab on the first real run, on the first prefix I pointed it at.</p>
+
+    <p>It also does something the enterprise discovery tools mostly don't: it doesn't just snapshot <em>now</em>. It accumulates days of evidence and tells you how <em>sure</em> it is — and that temporal confidence is the part I think is genuinely worth building.</p>
+
+    <p>It's open source, built in public, and deliberately small — one problem, solved completely. That's the whole idea behind Nimentus: the unglamorous problems the big platforms leave behind, handled properly, one at a time.</p>
+
+    <p class="creed-line">Fino alla fine.</p>
+
+    <div class="endcard">
+      <p>ReclaimNet is open source. If you run NetBox and have ever wondered how many of your "active" IPs are actually ghosts — that's exactly what it's for.</p>
+      <a href="https://github.com/Nimentus/reclaimnet" target="_blank" rel="noopener" class="btn btn-solid">View ReclaimNet on GitHub <span class="arr">↗</span></a>
+    </div>
+
+  </div>
+</article>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html#top" class="brand"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span> Nimentus</a>
+      <div class="creed">Fino alla <span>fine.</span></div>
+      <div class="cr">© 2026 Nimentus · Built in public</div>
+    </div>
+    <div class="foot-stripe" aria-hidden="true" id="footStripe"></div>
+  </div>
+</footer>
+
+<script>
+  const hdr=document.getElementById('hdr');
+  const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>40);
+  onScroll();addEventListener('scroll',onScroll,{passive:true});
+
+  const btn=document.getElementById('menuBtn'),links=document.getElementById('navlinks');
+  btn.addEventListener('click',()=>{
+    const open=links.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open);btn.textContent=open?'Close':'Menu';
+  });
+  links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    links.classList.remove('open');btn.textContent='Menu';btn.setAttribute('aria-expanded','false');
+  }));
+
+  const fs=document.getElementById('footStripe');
+  for(let i=0;i<54;i++){const b=document.createElement('i');
+    b.style.background = i%9===4 ? '#b08d3b' : (i%2 ? 'transparent' : '#f5f3ec');
+    fs.appendChild(b);}
+</script>
+</body>
+</html>
