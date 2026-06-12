@@ -32,12 +32,8 @@
   .wrap{max-width:1140px;margin:0 auto;padding:0 32px}
   .mono{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
 
-  /* ---- stripe motif ---- */
-  .stripes{
-    background-image:repeating-linear-gradient(90deg,var(--ink) 0 13px,transparent 13px 26px);
-  }
+  .stripes{background-image:repeating-linear-gradient(90deg,var(--ink) 0 13px,transparent 13px 26px);}
 
-  /* ---- header ---- */
   header{
     position:fixed;top:0;left:0;right:0;z-index:50;
     transition:background .3s ease,border-color .3s ease,padding .3s ease;
@@ -64,7 +60,6 @@
   .menu-btn{display:none;background:none;border:0;cursor:pointer;font-family:var(--mono);
     font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 
-  /* ---- hero ---- */
   .hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;position:relative}
   .hero-grid{display:grid;grid-template-columns:1.55fr .9fr;gap:48px;align-items:center;width:100%}
   .kicker{color:var(--mute);margin-bottom:26px;display:flex;align-items:center;gap:14px}
@@ -86,7 +81,6 @@
   .btn .arr{transition:transform .22s ease}
   .btn:hover .arr{transform:translateX(4px)}
 
-  /* hero stripe art */
   .hero-art{position:relative;height:430px;display:flex;justify-content:center}
   .hero-art .field{position:relative;width:100%;height:100%;overflow:hidden;
     border:1px solid var(--ink);background:var(--paper-soft)}
@@ -100,7 +94,6 @@
     font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
     text-align:center;padding:11px}
 
-  /* ---- section scaffolding ---- */
   section{padding:110px 0;position:relative}
   .seclabel{display:flex;align-items:baseline;gap:16px;margin-bottom:44px}
   .seclabel .num{font-family:var(--serif);font-size:15px;color:var(--gold);font-style:italic}
@@ -110,14 +103,12 @@
     line-height:1.08;letter-spacing:-.02em}
   h3{font-family:var(--serif);font-weight:500;font-size:25px;letter-spacing:-.01em}
 
-  /* manifesto */
   .manifesto{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper-soft)}
   .manifesto .big{font-family:var(--serif);font-weight:300;font-size:clamp(24px,3vw,34px);
     line-height:1.42;letter-spacing:-.015em;max-width:18em}
   .manifesto .big b{font-weight:600}
   .manifesto .big .g{font-style:italic;color:var(--gold)}
 
-  /* reclaimnet */
   .rn-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
   .rn-grid p{color:#34322d;margin:18px 0}
   .pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
@@ -128,10 +119,9 @@
   .feat li .b{width:9px;height:9px;flex:none;margin-top:7px;background:var(--ink)}
   .feat li:last-child .b{background:var(--gold)}
 
-  /* product shot (real screenshots) */
   .shot{border:1px solid var(--line);background:var(--paper-soft);overflow:hidden;
     box-shadow:0 26px 50px -30px rgba(0,0,0,.45)}
-  .shot img{width:100%;display:block}
+  .shot img{width:100%;display:block;cursor:zoom-in}
   .shot .cap{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--mute);
     padding:13px 16px;border-top:1px solid var(--line);background:var(--paper)}
   .shot-stack{display:grid;gap:22px}
@@ -142,7 +132,17 @@
   .stat .n{font-family:var(--serif);font-size:30px;letter-spacing:-.01em}
   .stat .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
 
-  /* coming-soon product cards */
+  .lightbox{position:fixed;inset:0;z-index:100;display:none;
+    align-items:center;justify-content:center;padding:40px;
+    background:rgba(13,12,11,.92);cursor:zoom-out;backdrop-filter:blur(4px)}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:95vw;max-height:92vh;width:auto;height:auto;
+    border:1px solid rgba(245,243,236,.18);box-shadow:0 30px 80px -20px rgba(0,0,0,.7)}
+  .lightbox .x{position:absolute;top:24px;right:30px;color:var(--paper);
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    cursor:pointer;opacity:.7;transition:opacity .2s}
+  .lightbox .x:hover{opacity:1}
+
   .more{margin-top:84px}
   .prod-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
   .pcard{border:1px solid var(--line);padding:32px;background:var(--paper-soft);
@@ -154,7 +154,6 @@
   .pcard .soon{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
     border:1px solid var(--ink);padding:5px 11px;display:inline-block}
 
-  /* writing */
   .posts{border-top:1px solid var(--line)}
   .post{display:grid;grid-template-columns:160px 1fr auto;gap:30px;align-items:baseline;
     padding:30px 0;border-bottom:1px solid var(--line);transition:padding .25s ease}
@@ -167,7 +166,6 @@
   .post.live:hover{padding-left:14px}
   .post.live:hover .ttl{color:var(--ink)}
 
-  /* about */
   .about{background:var(--ink);color:var(--paper)}
   .about .seclabel .txt{color:#9a978d}
   .about .seclabel .rule{background:rgba(245,243,236,.16)}
@@ -183,7 +181,6 @@
   .photo .ph{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--ink);background:var(--paper);padding:9px 14px;border:1px solid var(--ink)}
 
-  /* contact */
   .contact h2{max-width:14em;margin-bottom:36px}
   .clinks{display:flex;flex-direction:column;border-top:1px solid var(--line)}
   .clink{display:flex;align-items:center;justify-content:space-between;padding:26px 0;
@@ -194,7 +191,6 @@
   .clink .arr{transition:transform .22s}
   .clink:hover .arr{transform:translate(5px,-5px)}
 
-  /* footer */
   footer{background:var(--ink);color:var(--paper);padding:60px 0 40px}
   .foot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
   .foot .brand{color:var(--paper)}
@@ -206,7 +202,6 @@
   .foot-stripe{height:6px;margin-top:40px}
   .foot-stripe i{display:inline-block;width:13px;height:100%}
 
-  /* reveal animation */
   .rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
   .rv.in{opacity:1;transform:none}
   .hero .rv{transition-delay:var(--d,0s)}
@@ -255,7 +250,6 @@
 
 <main id="top">
 
-  <!-- ===================== HERO ===================== -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
@@ -280,7 +274,6 @@
     </div>
   </section>
 
-  <!-- ===================== MANIFESTO ===================== -->
   <section class="manifesto">
     <div class="wrap">
       <div class="seclabel rv"><span class="num">01</span><span class="txt">The idea</span><span class="rule"></span></div>
@@ -288,7 +281,6 @@
     </div>
   </section>
 
-  <!-- ===================== RECLAIMNET ===================== -->
   <section id="products">
     <div class="wrap">
       <div class="seclabel rv"><span class="num">02</span><span class="txt">Products</span><span class="rule"></span></div>
@@ -321,12 +313,10 @@
 
         <div class="rv">
           <div class="shot-stack">
-            <!-- PRIMARY: dashboard screenshot -->
             <div class="shot">
               <img src="images/reclaimnet-dashboard.png" alt="ReclaimNet web dashboard showing scored IP verdicts with bands, confidence, and NetBox status">
               <div class="cap">The dashboard — live verdicts, one host scored dead against an "active" NetBox record.</div>
             </div>
-            <!-- SECONDARY: review-then-apply -->
             <div class="shot">
               <img src="images/reclaimnet-review.png" alt="ReclaimNet review-then-apply panel showing pending NetBox writes before a human confirms them">
               <div class="cap">Review-then-apply — every NetBox write is shown and approved by a human first.</div>
@@ -355,13 +345,11 @@
     </div>
   </section>
 
-  <!-- ===================== WRITING ===================== -->
   <section id="writing">
     <div class="wrap">
       <div class="seclabel rv"><span class="num">03</span><span class="txt">Writing · build in public</span><span class="rule"></span></div>
       <div class="posts rv">
 
-        <!-- FIRST REAL POST -->
         <a class="post live" href="watching-an-ip-die.html">
           <div class="date">Jun 2026</div>
           <div>
@@ -371,7 +359,6 @@
           <div class="stat">Read →</div>
         </a>
 
-        <!-- PLACEHOLDER POSTS — replace as you publish -->
         <a class="post soon">
           <div class="date">Soon</div>
           <div><div class="ttl">From CLI to deployed tool: ReclaimNet gets an API and a face</div>
@@ -390,7 +377,6 @@
     </div>
   </section>
 
-  <!-- ===================== ABOUT ===================== -->
   <section id="about" class="about">
     <div class="wrap">
       <div class="seclabel rv"><span class="num">04</span><span class="txt">About</span><span class="rule"></span></div>
@@ -403,20 +389,17 @@
           <p>Everything we build is open source, built in public, and meant to be useful on day one.</p>
         </div>
         <div class="rv">
-          <!-- REPLACE: drop your photo here. Set as background-image or <img>. -->
           <div class="photo"><span class="ph">Your photo here</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== CONTACT ===================== -->
   <section id="contact" class="contact">
     <div class="wrap">
       <div class="seclabel rv"><span class="num">05</span><span class="txt">Work with me</span><span class="rule"></span></div>
       <h2 class="rv">Available for consulting and contract work on network automation, security architecture, and tooling.</h2>
       <div class="clinks rv">
-        <!-- REPLACE the href + .v values with your real details -->
         <a class="clink" href="mailto:hello@nimentus.com">
           <span class="l">Email</span><span class="v">hello@nimentus.com&nbsp;&nbsp;<span class="arr">↗</span></span>
         </a>
@@ -443,13 +426,16 @@
   </div>
 </footer>
 
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <span class="x" id="lightboxClose">Close ✕</span>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <script>
-  // sticky header state
   const hdr=document.getElementById('hdr');
   const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>40);
   onScroll();addEventListener('scroll',onScroll,{passive:true});
 
-  // mobile menu
   const btn=document.getElementById('menuBtn'),links=document.getElementById('navlinks');
   btn.addEventListener('click',()=>{
     const open=links.classList.toggle('open');
@@ -459,19 +445,36 @@
     links.classList.remove('open');btn.textContent='Menu';btn.setAttribute('aria-expanded','false');
   }));
 
-  // scroll reveal
   const io=new IntersectionObserver((es)=>es.forEach(e=>{
     if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
   }),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
   document.querySelectorAll('.rv').forEach(el=>io.observe(el));
-  // hero reveals immediately
   document.querySelectorAll('.hero .rv').forEach(el=>el.classList.add('in'));
 
-  // footer stripe build (alternating black/gold/transparent)
   const fs=document.getElementById('footStripe');
   for(let i=0;i<54;i++){const b=document.createElement('i');
     b.style.background = i%9===4 ? '#b08d3b' : (i%2 ? 'transparent' : '#f5f3ec');
     fs.appendChild(b);}
+
+  // lightbox — click a product shot to zoom
+  const lb=document.getElementById('lightbox');
+  const lbImg=document.getElementById('lightboxImg');
+  document.querySelectorAll('.shot img').forEach(img=>{
+    img.addEventListener('click',()=>{
+      lbImg.src=img.src;
+      lbImg.alt=img.alt;
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden','false');
+    });
+  });
+  function closeLightbox(){
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden','true');
+    lbImg.src='';
+  }
+  lb.addEventListener('click',closeLightbox);
+  document.getElementById('lightboxClose').addEventListener('click',closeLightbox);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeLightbox(); });
 </script>
 </body>
 </html>
