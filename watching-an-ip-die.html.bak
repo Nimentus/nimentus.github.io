@@ -93,7 +93,7 @@
   .rule-strong{height:1px;background:var(--line);margin:46px 0}
 
   /* figure / screenshot */
-  figure{margin:48px 0;border:1px solid var(--line);background:var(--paper-soft);overflow:hidden;width:min(100vw - 64px, 1000px);position:relative;left:50%;transform:translateX(-50%)}
+  figure{margin:40px 0;border:1px solid var(--line);background:var(--paper-soft);overflow:hidden}
   figure img{width:100%;display:block}
   figure .ph{aspect-ratio:16/6;display:flex;align-items:center;justify-content:center;text-align:center;
     padding:24px;background:repeating-linear-gradient(90deg,rgba(13,12,11,.04) 0 13px,transparent 13px 26px)}
@@ -246,6 +246,12 @@
       <li><span class="b"></span><span><b>Documented, but dead.</b> NetBox says <em>active</em>; ReclaimNet has watched, thoroughly, and found nothing. These are your reclaim candidates.</span></li>
       <li><span class="b"></span><span><b>Alive, but undocumented.</b> A host answering on the wire that NetBox has no record of. Shadow IPs — the opposite problem, and a security one.</span></li>
     </ul>
+
+    <figure>
+      <!-- REPLACE the .ph block with: <img src="images/reconciliation.png" alt="..."> -->
+      <div class="ph"><span>[ screenshot: terminal reconciliation report with the nb_status column — a row where NetBox says "active" and ReclaimNet says "dead", flagged as a reclaim candidate ]</span></div>
+      <figcaption>The whole point in one line: the source of truth and reality, disagreeing — with the evidence to back it.</figcaption>
+    </figure>
 
     <p>And then it closes the loop. ReclaimNet writes its verdict <em>back</em> into NetBox — as a tag and custom fields on the IP object — so the answer lives where engineers already work, not buried in another tool's dashboard.</p>
 
