@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nimentus — Micro-utilities for infrastructure requirements </title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%230d0c0b'/%3E%3Crect%20x='14'%20y='15'%20width='6'%20height='34'%20fill='%23f5f3ec'/%3E%3Crect%20x='23'%20y='15'%20width='6'%20height='34'%20fill='%23f5f3ec'/%3E%3Crect%20x='29'%20y='25'%20width='6'%20height='24'%20fill='%23b08d3b'/%3E%3Crect%20x='38'%20y='15'%20width='6'%20height='34'%20fill='%23f5f3ec'/%3E%3Crect%20x='47'%20y='15'%20width='6'%20height='34'%20fill='%23f5f3ec'/%3E%3C/svg%3E">
 <meta name="description" content="Nimentus builds small, precise, open tools for the network-hygiene problems the big vendors ignore — dead IPs, firewall sprawl, config drift.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,10 +47,9 @@
   .nav{display:flex;align-items:center;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);
     font-weight:600;font-size:22px;letter-spacing:-.01em}
-  .brand .mark{display:flex;gap:2px;height:22px;align-items:stretch}
-  .brand .mark i{width:3px;background:var(--ink);display:block}
-  .brand .mark i:nth-child(4){background:var(--gold)}
-  .brand .mark i:nth-child(5){opacity:.28}
+  .brand .mark{height:24px;width:auto;display:block}
+  .brand .mark .g-tall{fill:var(--ink)}
+  .brand .mark .g-smile{stroke:var(--paper);stroke-width:2}
   .navlinks{display:flex;gap:34px;align-items:center}
   .navlinks a{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
     text-transform:uppercase;color:var(--mute);position:relative;padding:4px 0;transition:color .2s}
@@ -83,13 +83,8 @@
 
   .hero-art{position:relative;height:430px;display:flex;justify-content:center}
   .hero-art .field{position:relative;width:100%;height:100%;overflow:hidden;
-    border:1px solid var(--ink);background:var(--paper-soft)}
-  .hero-art .bars{position:absolute;inset:0;display:flex;gap:0}
-  .hero-art .bars b{flex:1;background:var(--ink)}
-  .hero-art .bars b:nth-child(even){background:transparent}
-  .hero-art .bars b.dim{background:#bdb8ab}
-  .hero-art .star{position:absolute;top:22px;left:50%;transform:translateX(-50%);
-    color:var(--gold);font-size:26px}
+    border:1px solid var(--ink);background:var(--ink);display:flex;align-items:center;justify-content:center}
+  .hero-art .herologo{width:46%;max-width:210px;height:auto}
   .hero-art .tag{position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:var(--paper);
     font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
     text-align:center;padding:11px}
@@ -194,8 +189,8 @@
   footer{background:var(--ink);color:var(--paper);padding:60px 0 40px}
   .foot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
   .foot .brand{color:var(--paper)}
-  .foot .brand .mark i{background:var(--paper)}
-  .foot .brand .mark i:nth-child(4){background:var(--gold)}
+  .foot .brand .mark .g-tall{fill:var(--paper)}
+  .foot .brand .mark .g-smile{stroke:var(--ink)}
   .foot .creed{font-family:var(--serif);font-style:italic;font-size:18px}
   .foot .creed span{color:var(--gold)}
   .foot .cr{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#9a978d;text-transform:uppercase}
@@ -234,7 +229,7 @@
 <header id="hdr">
   <div class="wrap nav">
     <a href="#top" class="brand" aria-label="Nimentus home">
-      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <svg class="mark" viewBox="0 0 85 88" aria-hidden="true"><rect x="4" y="6" width="13" height="76" class="g-tall"/><rect x="20" y="6" width="13" height="76" class="g-tall"/><rect x="36" y="30" width="13" height="52" fill="#b08d3b"/><path d="M38.5 41 q4 4.5 8 0" class="g-smile" fill="none" stroke-linecap="round"/><rect x="52" y="6" width="13" height="76" class="g-tall"/><rect x="68" y="6" width="13" height="76" class="g-tall"/></svg>
       Nimentus
     </a>
     <nav class="navlinks" id="navlinks">
@@ -264,10 +259,14 @@
       </div>
       <div class="hero-art rv" style="--d:.2s" aria-hidden="true">
         <div class="field">
-          <div class="star">★</div>
-          <div class="bars">
-            <b></b><b></b><b></b><b></b><b></b><b></b><b></b><b class="dim"></b><b></b><b></b><b></b><b></b><b></b>
-          </div>
+          <svg class="herologo" viewBox="0 0 84 88">
+            <rect x="4" y="6" width="13" height="76" fill="#f5f3ec"/>
+            <rect x="20" y="6" width="13" height="76" fill="#f5f3ec"/>
+            <rect x="36" y="30" width="13" height="52" fill="#b08d3b"/>
+            <path d="M38.5 41 q4 4.5 8 0" stroke="#0d0c0b" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <rect x="52" y="6" width="13" height="76" fill="#f5f3ec"/>
+            <rect x="68" y="6" width="13" height="76" fill="#f5f3ec"/>
+          </svg>
           <div class="tag">Fino alla Fine</div>
         </div>
       </div>
@@ -418,7 +417,7 @@
 <footer>
   <div class="wrap">
     <div class="foot">
-      <a href="#top" class="brand"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span> Nimentus</a>
+      <a href="#top" class="brand"><svg class="mark" viewBox="0 0 85 88" aria-hidden="true"><rect x="4" y="6" width="13" height="76" class="g-tall"/><rect x="20" y="6" width="13" height="76" class="g-tall"/><rect x="36" y="30" width="13" height="52" fill="#b08d3b"/><path d="M38.5 41 q4 4.5 8 0" class="g-smile" fill="none" stroke-linecap="round"/><rect x="52" y="6" width="13" height="76" class="g-tall"/><rect x="68" y="6" width="13" height="76" class="g-tall"/></svg> Nimentus</a>
       <div class="creed">Fino alla <span>fine.</span></div>
       <div class="cr">© 2026 Nimentus · Built in public</div>
     </div>
