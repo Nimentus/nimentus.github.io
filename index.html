@@ -177,23 +177,34 @@
     color:var(--ink);background:var(--paper);padding:9px 14px;border:1px solid var(--ink)}
 
   .contact h2{max-width:14em;margin-bottom:36px}
-  /* contact form */
+  /* contact form — light background */
   .nForm{margin-top:44px;max-width:760px}
   .nForm .row{display:flex;gap:18px;flex-wrap:wrap}
   .nForm .fld{flex:1 1 240px;display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
   .nForm label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
-  .nForm input,.nForm textarea{font-family:var(--sans);font-size:16px;color:var(--ink);background:var(--paper);
-    border:1px solid var(--line);border-radius:8px;padding:13px 15px;width:100%;transition:border-color .18s,box-shadow .18s}
+  .nForm input,
+  .nForm textarea{
+    font-family:var(--sans);font-size:16px;color:var(--ink);background:#fff;
+    border:1px solid var(--line);border-radius:8px;padding:13px 15px;width:100%;
+    transition:border-color .18s,box-shadow .18s;-webkit-text-fill-color:var(--ink);
+  }
   .nForm textarea{min-height:130px;resize:vertical;line-height:1.55}
-  .nForm input:focus,.nForm textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,141,59,.16)}
-  .nForm input::placeholder,.nForm textarea::placeholder{color:#a8a59c}
-  .nForm .btn-send{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
-    background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:999px;padding:14px 30px;
-    cursor:pointer;transition:background .2s,color .2s;display:inline-flex;align-items:center;gap:9px}
+  .nForm input:focus,
+  .nForm textarea:focus{
+    outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,141,59,.16);
+  }
+  .nForm input::placeholder,
+  .nForm textarea::placeholder{color:#a8a59c;-webkit-text-fill-color:#a8a59c}
+  .nForm .btn-send{
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+    background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:999px;
+    padding:14px 30px;cursor:pointer;transition:background .2s,color .2s;
+    display:inline-flex;align-items:center;gap:9px;
+  }
   .nForm .btn-send:hover{background:transparent;color:var(--ink)}
   .nForm .btn-send .arr{transition:transform .22s}
   .nForm .btn-send:hover .arr{transform:translateX(4px)}
-  .nForm .formnote{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:#9a978d;margin-top:14px}
+  .nForm .formnote{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--mute);margin-top:14px}
   .nForm .ok{display:none;font-family:var(--serif);font-size:22px;color:var(--ink);padding:10px 0}
   .nForm.sent .formgrid{display:none}
   .nForm.sent .ok{display:block}
@@ -466,7 +477,7 @@
         </a>
       </div>
 
-      <form class="nForm rv" action="hhttps://formspree.io/f/xykqgnwj" method="POST">
+      <form class="nForm rv" action="https://formspree.io/f/xykqgnwj" method="POST">
         <div class="formgrid">
           <p class="csub">Or send a message directly — consulting, contract work, a question about a tool, or a feature you wish one of them had.</p>
           <input type="hidden" name="_subject" value="Nimentus contact form">
