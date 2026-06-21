@@ -181,23 +181,23 @@
   .nForm{margin-top:44px;max-width:760px}
   .nForm .row{display:flex;gap:18px;flex-wrap:wrap}
   .nForm .fld{flex:1 1 240px;display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
-  .nForm label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9a978d}
-  .nForm input,.nForm textarea{font-family:var(--sans);font-size:16px;color:var(--paper);background:rgba(245,243,236,.04);
-    border:1px solid rgba(245,243,236,.18);border-radius:8px;padding:13px 15px;width:100%;transition:border-color .18s,box-shadow .18s}
+  .nForm label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+  .nForm input,.nForm textarea{font-family:var(--sans);font-size:16px;color:var(--ink);background:var(--paper);
+    border:1px solid var(--line);border-radius:8px;padding:13px 15px;width:100%;transition:border-color .18s,box-shadow .18s}
   .nForm textarea{min-height:130px;resize:vertical;line-height:1.55}
   .nForm input:focus,.nForm textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,141,59,.16)}
-  .nForm input::placeholder,.nForm textarea::placeholder{color:rgba(245,243,236,.32)}
+  .nForm input::placeholder,.nForm textarea::placeholder{color:#a8a59c}
   .nForm .btn-send{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
-    background:var(--paper);color:var(--ink);border:1px solid var(--paper);border-radius:999px;padding:14px 30px;
+    background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:999px;padding:14px 30px;
     cursor:pointer;transition:background .2s,color .2s;display:inline-flex;align-items:center;gap:9px}
-  .nForm .btn-send:hover{background:transparent;color:var(--paper)}
+  .nForm .btn-send:hover{background:transparent;color:var(--ink)}
   .nForm .btn-send .arr{transition:transform .22s}
   .nForm .btn-send:hover .arr{transform:translateX(4px)}
   .nForm .formnote{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:#9a978d;margin-top:14px}
-  .nForm .ok{display:none;font-family:var(--serif);font-size:22px;color:var(--paper);padding:10px 0}
+  .nForm .ok{display:none;font-family:var(--serif);font-size:22px;color:var(--ink);padding:10px 0}
   .nForm.sent .formgrid{display:none}
   .nForm.sent .ok{display:block}
-  .contact .csub{color:#9a978d;max-width:40em;margin:-18px 0 8px}
+  .contact .csub{color:var(--mute);max-width:40em;margin:-18px 0 8px}
   .clinks{display:flex;flex-direction:column;border-top:1px solid var(--line)}
   .clink{display:flex;align-items:center;justify-content:space-between;padding:26px 0;
     border-bottom:1px solid var(--line);transition:padding .25s ease}
